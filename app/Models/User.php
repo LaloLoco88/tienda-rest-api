@@ -55,4 +55,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tienda::class, 'vendedor_id');
     }
+
+    /**
+     * Un usuario cliente puede tener varios carritos
+     */
+    public function carritos(): HasMany
+    {
+        return $this->hasMany(Carrito::class, 'cliente_id');
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\TiendaController;
 use Illuminate\Http\Request;
@@ -17,4 +18,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tiendas', TiendaController::class);
     Route::apiResource('productos', ProductoController::class);
+
+    Route::post('/carrito/agregar', [CarritoController::class, 'agregarProducto'])->name('carrito.agregar');
+    Route::post('/carrito/eliminar', [CarritoController::class, 'eliminarProducto'])->name('carrito.eliminar');
 });

@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Producto extends Model
+class Carrito extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductoFactory> */
+    /** @use HasFactory<\Database\Factories\CarritoFactory> */
     use HasFactory;
 
     /**
@@ -18,26 +18,23 @@ class Producto extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'tienda_id',
-        'nombre',
-        'precio',
-        'stock',
+        'cliente_id',
     ];
 
     /**
-     * Obtiene la tienda en donde se venden los productos
+     * Obtiene al cliente al que le pertenece el carrito
      */
-    public function tienda(): BelongsTo
+    public function cliente(): BelongsTo
     {
-        return $this->belongsTo(Tienda::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
-     *
+     * Obtiene los productos dentro de un carrito
      */
-    public function carritos(): BelongsToMany
+    public function productos(): BelongsToMany
     {
-        return $this->belongsToMany(Carrito::class, 'carrito_productos')
+        return $this->belongsToMany(Producto::class, 'carrito_productos')
             ->withPivot('cantidad');
     }
 }
