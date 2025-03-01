@@ -10,59 +10,13 @@ use Illuminate\Auth\Access\Response;
 class CarritoPolicy
 {
     /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return false;
-    }
-
-    /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Carrito $carrito): bool
+    public function view(User $user): Response
     {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Carrito $carrito): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Carrito $carrito): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Carrito $carrito): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Carrito $carrito): bool
-    {
-        return false;
+        return $user->tipo == TipoUsuarioEnum::CLIENTE->value
+            ? Response::allow()
+            : Response::deny('Solo los clientes pueden ver su carrito.', 403);
     }
 
     public function agregarProducto(User $user): Response
@@ -73,6 +27,13 @@ class CarritoPolicy
     }
 
     public function eliminarProducto(User $user): Response
+    {
+        return $user->tipo == TipoUsuarioEnum::CLIENTE->value
+            ? Response::allow()
+            : Response::deny('Solo los clientes pueden quitar productos de su carro.', 403);
+    }
+
+    public function comprar(User $user): Response
     {
         return $user->tipo == TipoUsuarioEnum::CLIENTE->value
             ? Response::allow()

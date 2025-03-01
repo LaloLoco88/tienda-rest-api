@@ -33,11 +33,20 @@ class Producto extends Model
     }
 
     /**
-     *
+     * Todos los carritos en los que aparece el producto
      */
     public function carritos(): BelongsToMany
     {
         return $this->belongsToMany(Carrito::class, 'carrito_productos')
             ->withPivot('cantidad');
+    }
+
+    /**
+     * Todas las compras en las que aparece el producto
+     */
+    public function compras(): BelongsToMany
+    {
+        return $this->belongsToMany(Compra::class, 'compra_productos')
+            ->withPivot('cantidad', 'precio');
     }
 }

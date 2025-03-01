@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Carrito\AgregarProductoRequest;
 use App\Http\Requests\Carrito\EliminarProductoRequest;
+use App\Http\Resources\CarritoResource;
 use App\Models\Carrito;
 use App\Services\CarritoService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class CarritoController extends Controller
@@ -21,43 +21,15 @@ class CarritoController extends Controller
     ) {}
 
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
-    public function show(Carrito $carrito)
+    public function show()
     {
-        //
-    }
+        Gate::authorize('view', Carrito::class);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Carrito $carrito)
-    {
-        //
-    }
+        $carrito = $this->carritoService->obtenerCarritoActivo();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Carrito $carrito)
-    {
-        //
+        return new CarritoResource($carrito);
     }
 
     /**
@@ -87,5 +59,19 @@ class CarritoController extends Controller
         return response()->json([
             'message' => 'Productos eliminados con éxito.',
         ], 200);
+    }
+
+    /**
+     * Hacer la compra de un carrito
+     */
+    public function comprar(): JsonResponse
+    {
+        Gate::authorize('comprar', Carrito::class);
+
+        $this->carritoService->comprarCarrito();
+
+        return response()->json([
+            'message' => 'Compra realizada con éxito.',
+        ], 201);
     }
 }
